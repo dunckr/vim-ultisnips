@@ -1,0 +1,25 @@
+global !p
+fn_base = fn.split(os.extsep)[0];
+endglobal
+
+snippet component "React Component"b
+import React, {PropTypes, Component} from 'react';
+
+export default class `!p snip.rv = fn_base` extends Component {
+	static propTypes = {
+		${2:prop: PropTypes.func.isRequired}
+	}
+
+	render() {
+		return (${1:<div></div>});
+	}
+}
+endsnippet
+
+snippet componentFn "React Component Function"b
+import React from 'react';
+
+export default function `!p snip.rv = fn_base`(props) {
+	return ($0);
+}
+endsnippet
