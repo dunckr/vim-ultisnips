@@ -1,0 +1,119 @@
+priority -50
+
+snippet flux_action "flux.action"
+const AppDispatcher = require('../dispatcher/AppDispatcher');
+const Constants = require('../constants/Constants');
+
+const ${1:Action} = {
+	action(data) {
+		AppDispatcher.dispatch({
+			actionType: Constants.CONSTANT,
+			data,
+		});
+	},
+};
+
+module.exports = $1;
+endsnippet
+
+snippet flux_constants "flux.constants"
+const keyMirror = require('keymirror');
+
+module.exports = keyMirror({
+	CONSTANT: null,
+});
+endsnippet
+
+snippet flux_component "flux.component"
+const React = require('react');
+const { PropTypes } = React;
+
+const ${1:Component} = React.createClass({
+	propTypes: {
+		prop: PropTypes.string.isRequired,
+	},
+
+	getDefaultProps() {
+		return {
+			prop: '',
+		};
+	},
+
+	render() {
+		return <div />;
+	},
+});
+
+module.exports = $1;
+endsnippet
+
+snippet flux_component_pure "flux.component.pure"
+const React = require('react');
+const { PropTypes } = React;
+
+const ${1:Component} = props => {
+	return <div />;
+};
+
+$1.propTypes = {
+	prop: PropTypes.string.isRequired,
+};
+
+$1.defaultProps = {
+	prop: 'No',
+};
+
+module.exports = $1;
+endsnippet
+
+snippet flux_dispatcher "flux.dispatcher"
+const Dispatcher = require('flux').Dispatcher;
+
+module.exports = new Dispatcher();
+endsnippet
+
+snippet flux_store "flux.store"
+const AppDispatcher = require('../dispatcher/AppDispatcher');
+const EventEmitter = require('events').EventEmitter;
+const Constants = require('../constants/Constants');
+const assign = require('object-assign');
+
+const CHANGE_EVENT = 'change';
+const _data = {};
+
+const ${1:Store} = assign({}, EventEmitter.prototype, {
+	getAll() {
+		return _data;
+	},
+
+	emitChange() {
+		this.emit(CHANGE_EVENT);
+	},
+
+	addChangeListener(callback) {
+		this.on(CHANGE_EVENT, callback);
+	},
+
+	removeChangeListener(callback) {
+		this.removeListener(CHANGE_EVENT, callback);
+	},
+});
+
+AppDispatcher.register(action => {
+	switch (action.actionType) {
+		case Constants.CONSTANT:
+			break;
+		default:
+		// no op
+	}
+});
+
+module.exports = $1;
+endsnippet
+
+snippet flux_init "flux.init"
+const React = require('react');
+const App = require('./components/App');
+
+React.render(<App />, document.getElementById('app'));
+endsnippet

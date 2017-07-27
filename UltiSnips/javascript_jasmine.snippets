@@ -1,0 +1,39 @@
+priority -50
+
+snippet describe "describe"
+describe('${1:describe}', () => {
+	${0}
+});
+endsnippet
+
+snippet it "it"
+it('${1:it}', () => {
+	${0}
+});
+endsnippet
+
+snippet expect "expect"
+expect(${1:expect}).toEqual($0);
+endsnippet
+
+snippet beforeEach "beforeEach"
+beforeEach(() => {
+	${0}
+});
+endsnippet
+
+snippet afterEach "afterEach"
+afterEach(() => {
+	${0}
+});
+endsnippet
+
+snippet test "test"
+describe('${1:describe}', () => {
+	describe('${2:describe}', () => {
+		it('${3:it}', () => {
+			expect(${4:expect}).toEqual($0);
+		});
+	});
+});
+endsnippet

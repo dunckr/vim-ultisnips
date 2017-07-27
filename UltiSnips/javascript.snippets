@@ -1,13 +1,17 @@
-snippet fn "Function"b
+snippet console_log "console.log"
+console.log('${0}');
+endsnippet
+
+snippet function "function"
 const ${1:name} = (${2:arg}) => {
-	${3:// init}
+	return ${3};
 }
 endsnippet
 
-snippet class "Class"b
+snippet class "class"
 class ${1:name} {
 	constructor(${2:arg}) {
-		${3:// init}
+		${3}
 	}
 	${4}
 }

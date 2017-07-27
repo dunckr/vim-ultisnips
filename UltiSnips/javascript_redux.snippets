@@ -1,0 +1,156 @@
+priority -50
+
+snippet redux_action "redux_action"
+import * as types from '../constants/ActionTypes';
+
+export const ${1:name} = data => ({ type: types.CONSTANT, data });
+endsnippet
+
+snippet redux_action_test "redux_action_test"
+import * as types from '../constants/ActionTypes';
+import * as actions from './index';
+
+describe('${1:name} actions', () => {
+	it('action should create CONSTANT action', () => {
+		const data = {};
+		expect(
+			actions.action(data).toEqual({
+				type: types.CONSTANT,
+				data,
+			})
+		);
+	});
+});
+endsnippet
+
+snippet redux_component "redux_component"
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+
+export default class ${1:Component} extends Component {
+	static propTypes = {
+		prop: PropTypes.string.isRequired,
+	};
+
+	render() {
+		return <div />;
+	}
+}
+endsnippet
+
+snippet redux_component_test "redux_component_test"
+import React from 'react';
+import { createRenderer } from 'react-test-renderer/shallow';
+import ${1:Component} from './$1';
+
+const setup = () => {
+	const props = {
+		prop: '',
+	};
+	const renderer = createRenderer();
+	renderer.render(<$1 {...props} />);
+	return {
+		props: props,
+		output: renderer.getRenderOutput(),
+		renderer: renderer,
+	};
+};
+
+describe('$1', () => {
+	describe('Component', () => {
+		it('should render correctly', () => {
+			const { output } = setup();
+			expect(output.props.prop).toEqual('');
+		});
+	});
+});
+endsnippet
+
+snippet redux_constants "redux_constants"
+export const ${1} = '$1';
+endsnippet
+
+snippet redux_container "redux_container"
+import React from 'react';
+import PropTypes from 'prop-types';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import Component from '../components/Component';
+import * as Actions from '../actions';
+
+const ${1:Container} = props =>
+	<Component {...props} />
+
+$1.propTypes = {
+	reducer: PropTypes.array.isRequired,
+	actions: PropTypes.object.isRequired,
+};
+
+const mapStateToProps = state => ({
+	reducer: state.reducer,
+});
+
+const mapDispatchToProps = dispatch => ({
+	actions: bindActionCreators(TodoActions, dispatch),
+});
+
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps
+	)($1);
+endsnippet
+
+snippet redux_reducer_root "redux_reducer_root"
+import { combineReducers } from 'redux';
+import reducer from './reducer';
+
+const ${1:rootReducer} = combineReducers({
+	reducer,
+});
+
+export default $1;
+endsnippet
+
+snippet redux_reducer "redux_reducer"
+import { CONSTANT } from '../constants/ActionTypes';
+
+const initialState = [{}];
+
+export default ${1:reducer} = (state = initialState, action) => {
+	switch (action.type) {
+		case CONSTANT:
+			return state;
+		default:
+			return state;
+	};
+}:
+endsnippet
+
+snippet redux_reducer_test "redux_reducer_test"
+import reducer from './reducer';
+import * as types from '../constants/ActionTypes';
+
+describe('${1:reducer} reducer', () => {
+	it('should handle initial state', () => {
+		expect(reducer(undefined, {})).toEqual([{}]);
+	});
+});
+endsnippet
+
+snippet redux_reducer_init "redux_reducer_init"
+import React from 'react';
+import { render } from 'react-dom';
+import { createStore } from 'redux';
+import { Provider } from 'react-redux';
+import Container from './containers/Container';
+import reducer from './reducers';
+
+const store = createStore(reducer);
+
+render(
+	<Provider store={store}>
+		<Container />
+	</Provider>,
+	document.getElementById('root')
+);
+endsnippet
