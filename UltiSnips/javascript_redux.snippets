@@ -10,8 +10,8 @@ snippet redux_action_test "redux_action_test"
 import * as types from '../constants/ActionTypes';
 import * as actions from './index';
 
-describe('${1:name} actions', () => {
-	it('action should create CONSTANT action', () => {
+describe('${1:name} action', () => {
+	it('should create CONSTANT action', () => {
 		const data = {};
 		expect(
 			actions.action(data).toEqual({
@@ -27,32 +27,56 @@ snippet redux_component "redux_component"
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-export default class ${1:Component} extends Component {
-	static propTypes = {
-		prop: PropTypes.string.isRequired,
-	};
-
+class ${1:Component} extends Component {
+	constructor(props) {
+		super(props);
+		this.state = {};
+	}
+	componentWillMount() {}
+	componentDidMount() {}
+	componentWillReceiveProps(nextProps) {}
+	shouldComponentUpdate(nextProps, nextState) {}
+	componentWillUpdate(nextProps, nextState) {}
+	componentDidUpdate(prevProps, prevState) {}
+	componentWillUnmount() {}
+	componentDidCatch(error, info) {}
 	render() {
 		return <div />;
 	}
 }
+
+$1.propTypes = {
+	prop: PropTypes.string.isRequired,
+};
+
+export default $1;
+endsnippet
+
+snippet redux_component "redux_component_function"
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+
+const ${1:Component} = props => <div />;
+
+$1.propTypes = {
+	prop: PropTypes.string.isRequired,
+};
+
+export default $1;
 endsnippet
 
 snippet redux_component_test "redux_component_test"
 import React from 'react';
-import { createRenderer } from 'react-test-renderer/shallow';
+import { shallow } from 'enzyme';
 import ${1:Component} from './$1';
 
-const setup = () => {
-	const props = {
-		prop: '',
-	};
-	const renderer = createRenderer();
-	renderer.render(<$1 {...props} />);
+const setup = (setupProps = {}) => {
+	const defaultProps = {};
+	const props = { ...defaultProps, ...setupProps };
+	const wrapper = shallow(<$1 {...props} />);
 	return {
-		props: props,
-		output: renderer.getRenderOutput(),
-		renderer: renderer,
+		props,
+		wrapper
 	};
 };
 
@@ -91,13 +115,35 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-	actions: bindActionCreators(TodoActions, dispatch),
+	actions: bindActionCreators(Actions, dispatch),
 });
 
 export default connect(
 	mapStateToProps,
 	mapDispatchToProps
-	)($1);
+)($1);
+endsnippet
+
+snippet redux_container "redux_container_test"
+import React from 'react';
+import configureStore from 'redux-mock-store';
+import { shallow } from 'enzyme';
+import ${1:Container} from './$1';
+
+const setup = (setupProps = {}) => {
+	const store = configureStore()({ props: [] });
+	const wrapper = shallow(<$1 store={store} />);
+	return {
+		store,
+		wrapper
+	};
+};
+
+describe('$1', () => {
+	describe('renders', () => {
+		const { wrapper } = setup();
+	});
+});
 endsnippet
 
 snippet redux_reducer_root "redux_reducer_root"
@@ -131,7 +177,7 @@ import reducer from './reducer';
 import * as types from '../constants/ActionTypes';
 
 describe('${1:reducer} reducer', () => {
-	it('should handle initial state', () => {
+	it('handles initial state', () => {
 		expect(reducer(undefined, {})).toEqual([{}]);
 	});
 });
