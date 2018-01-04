@@ -7,14 +7,16 @@ export const ${1:name} = data => ({ type: types.CONSTANT, data });
 endsnippet
 
 snippet redux_action_test "redux_action_test"
+import React from 'react';
+import { expect } from 'chai';
 import * as types from '../constants/ActionTypes';
 import * as actions from './index';
 
 describe('${1:name} action', () => {
-	it('should create CONSTANT action', () => {
+	it('creates CONSTANT action', () => {
 		const data = {};
 		expect(
-			actions.action(data).toEqual({
+			actions.action(data).to.eql({
 				type: types.CONSTANT,
 				data,
 			})
@@ -68,6 +70,7 @@ endsnippet
 snippet redux_component_test "redux_component_test"
 import React from 'react';
 import { shallow } from 'enzyme';
+import { expect } from 'chai';
 import ${1:Component} from './$1';
 
 const setup = (setupProps = {}) => {
@@ -83,8 +86,8 @@ const setup = (setupProps = {}) => {
 describe('$1', () => {
 	describe('Component', () => {
 		it('should render correctly', () => {
-			const { output } = setup();
-			expect(output.props.prop).toEqual('');
+			const { wrapper } = setup();
+			expect(wrapper.props().prop).to.eql('');
 		});
 	});
 });
@@ -124,7 +127,7 @@ export default connect(
 )($1);
 endsnippet
 
-snippet redux_container "redux_container_test"
+snippet redux_container_test "redux_container_test"
 import React from 'react';
 import configureStore from 'redux-mock-store';
 import { shallow } from 'enzyme';
@@ -174,11 +177,12 @@ endsnippet
 
 snippet redux_reducer_test "redux_reducer_test"
 import reducer from './reducer';
+import { expect } from 'chai';
 import * as types from '../constants/ActionTypes';
 
 describe('${1:reducer} reducer', () => {
 	it('handles initial state', () => {
-		expect(reducer(undefined, {})).toEqual([{}]);
+		expect(reducer(undefined, {})).to.eql([{}]);
 	});
 });
 endsnippet

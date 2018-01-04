@@ -13,7 +13,7 @@ it('${1:it}', () => {
 endsnippet
 
 snippet expect "expect"
-expect(${1:expect}).toEqual($0);
+expect(${1:expect}).to.eql($0);
 endsnippet
 
 snippet beforeEach "beforeEach"
@@ -32,7 +32,7 @@ snippet test "test"
 describe('${1:describe}', () => {
 	describe('${2:describe}', () => {
 		it('${3:it}', () => {
-			expect(${4:expect}).toEqual($0);
+			expect(${4:expect}).to.eql($0);
 		});
 	});
 });
