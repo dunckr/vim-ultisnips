@@ -1,7 +1,7 @@
 priority -50
 
 snippet redux_action "redux_action"
-import * as types from '../constants/ActionTypes';
+import * as types from '../constants';
 
 export const ${1:name} = data => ({ type: types.CONSTANT, data });
 endsnippet
@@ -9,18 +9,17 @@ endsnippet
 snippet redux_action_test "redux_action_test"
 import React from 'react';
 import { expect } from 'chai';
-import * as types from '../constants/ActionTypes';
-import * as actions from './index';
+
+import * as types from '../constants';
+import * as actions from '.';
 
 describe('${1:name} action', () => {
 	it('creates CONSTANT action', () => {
 		const data = {};
-		expect(
-			actions.action(data).to.eql({
-				type: types.CONSTANT,
-				data,
-			})
-		);
+		expect(actions.$1(data)).to.eql({
+			type: types.CONSTANT,
+			data,
+		});
 	});
 });
 endsnippet
@@ -54,7 +53,7 @@ $1.propTypes = {
 export default $1;
 endsnippet
 
-snippet redux_component "redux_component_function"
+snippet redux_component_function "redux_component_function"
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
@@ -71,6 +70,7 @@ snippet redux_component_test "redux_component_test"
 import React from 'react';
 import { shallow } from 'enzyme';
 import { expect } from 'chai';
+
 import ${1:Component} from './$1';
 
 const setup = (setupProps = {}) => {
@@ -79,7 +79,7 @@ const setup = (setupProps = {}) => {
 	const wrapper = shallow(<$1 {...props} />);
 	return {
 		props,
-		wrapper
+		wrapper,
 	};
 };
 
@@ -87,7 +87,7 @@ describe('$1', () => {
 	describe('Component', () => {
 		it('should render correctly', () => {
 			const { wrapper } = setup();
-			expect(wrapper.props().prop).to.eql('');
+			expect(wrapper.length).to.eql(1);
 		});
 	});
 });
@@ -102,13 +102,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import Component from '../components/Component';
+
+import ${1:Container} from '../components/$1';
 import * as Actions from '../actions';
 
-const ${1:Container} = props =>
-	<Component {...props} />
+const $1Container = props => <$1 {...props} />;
 
-$1.propTypes = {
+$1Container.propTypes = {
 	reducer: PropTypes.array.isRequired,
 	actions: PropTypes.object.isRequired,
 };
@@ -121,36 +121,39 @@ const mapDispatchToProps = dispatch => ({
 	actions: bindActionCreators(Actions, dispatch),
 });
 
-export default connect(
-	mapStateToProps,
-	mapDispatchToProps
-)($1);
+export default connect(mapStateToProps, mapDispatchToProps)($1Container);
 endsnippet
 
 snippet redux_container_test "redux_container_test"
 import React from 'react';
 import configureStore from 'redux-mock-store';
+import { expect } from 'chai';
 import { shallow } from 'enzyme';
-import ${1:Container} from './$1';
+
+import ${1:Container}Container from './$1';
 
 const setup = (setupProps = {}) => {
 	const store = configureStore()({ props: [] });
-	const wrapper = shallow(<$1 store={store} />);
+	const wrapper = shallow(<$1Container store={store} />);
 	return {
 		store,
-		wrapper
+		wrapper,
 	};
 };
 
-describe('$1', () => {
+describe('$1Container', () => {
 	describe('renders', () => {
-		const { wrapper } = setup();
+		it('should render', () => {
+			const { wrapper } = setup();
+			expect(wrapper.length).to.eql(1);
+		});
 	});
 });
 endsnippet
 
 snippet redux_reducer_root "redux_reducer_root"
 import { combineReducers } from 'redux';
+
 import reducer from './reducer';
 
 const ${1:rootReducer} = combineReducers({
@@ -161,45 +164,48 @@ export default $1;
 endsnippet
 
 snippet redux_reducer "redux_reducer"
-import { CONSTANT } from '../constants/ActionTypes';
+import { createReducer } from 'redux-create-reducer';
 
-const initialState = [{}];
+import { CONSTANT } from '../constants';
 
-export default ${1:reducer} = (state = initialState, action) => {
-	switch (action.type) {
-		case CONSTANT:
-			return state;
-		default:
-			return state;
-	};
-}:
+const initialState = {};
+
+const ${1:reducer} = {
+	[CONSTANT]: (state, action) => {
+		return state;
+	},
+};
+
+export default createReducer(initialState, $1);
 endsnippet
 
 snippet redux_reducer_test "redux_reducer_test"
-import reducer from './reducer';
 import { expect } from 'chai';
-import * as types from '../constants/ActionTypes';
 
-describe('${1:reducer} reducer', () => {
+import reducer from '.';
+import * as types from '../constants';
+
+describe('reducer', () => {
 	it('handles initial state', () => {
-		expect(reducer(undefined, {})).to.eql([{}]);
+		expect(reducer(undefined, {})).to.eql({});
 	});
 });
 endsnippet
 
-snippet redux_reducer_init "redux_reducer_init"
+snippet redux_init "redux_init"
 import React from 'react';
 import { render } from 'react-dom';
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
-import Container from './containers/Container';
+
+import ${1:container} from './containers/$1';
 import reducer from './reducers';
 
 const store = createStore(reducer);
 
 render(
 	<Provider store={store}>
-		<Container />
+		<$1 />
 	</Provider>,
 	document.getElementById('root')
 );
