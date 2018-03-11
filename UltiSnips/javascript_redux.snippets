@@ -8,7 +8,6 @@ endsnippet
 
 snippet redux_action_test "redux_action_test"
 import React from 'react';
-import { expect } from 'chai';
 
 import * as types from '../constants';
 import * as actions from '.';
@@ -16,7 +15,7 @@ import * as actions from '.';
 describe('${1:name} action', () => {
 	it('creates CONSTANT action', () => {
 		const data = {};
-		expect(actions.$1(data)).to.eql({
+		expect(actions.$1(data)).toEqual({
 			type: types.CONSTANT,
 			data,
 		});
@@ -69,7 +68,6 @@ endsnippet
 snippet redux_component_test "redux_component_test"
 import React from 'react';
 import { shallow } from 'enzyme';
-import { expect } from 'chai';
 
 import ${1:Component} from './$1';
 
@@ -84,10 +82,10 @@ const setup = (setupProps = {}) => {
 };
 
 describe('$1', () => {
-	describe('Component', () => {
-		it('should render correctly', () => {
+	describe('on mount', () => {
+		it('renders', () => {
 			const { wrapper } = setup();
-			expect(wrapper.length).to.eql(1);
+			expect(wrapper).toMatchSnapshot();
 		});
 	});
 });
@@ -106,7 +104,7 @@ import { connect } from 'react-redux';
 import ${1:Container} from '../components/$1';
 import * as Actions from '../actions';
 
-const $1Container = props => <$1 {...props} />;
+export const $1Container = props => <$1 {...props} />;
 
 $1Container.propTypes = {
 	reducer: PropTypes.array.isRequired,
@@ -126,26 +124,25 @@ endsnippet
 
 snippet redux_container_test "redux_container_test"
 import React from 'react';
-import configureStore from 'redux-mock-store';
-import { expect } from 'chai';
 import { shallow } from 'enzyme';
 
-import ${1:Container}Container from './$1';
+import { ${1:Container}Container } from './$1';
 
 const setup = (setupProps = {}) => {
-	const store = configureStore()({ props: [] });
-	const wrapper = shallow(<$1Container store={store} />);
+	const defaultProps = {};
+	const props = { ...defaultProps, ...setupProps };
+	const wrapper = shallow(<BoilerplateContainer {...props} />);
 	return {
-		store,
+		props,
 		wrapper,
 	};
 };
 
 describe('$1Container', () => {
-	describe('renders', () => {
-		it('should render', () => {
+	describe('on mount', () => {
+		it('renders', () => {
 			const { wrapper } = setup();
-			expect(wrapper.length).to.eql(1);
+			expect(wrapper).toMatchSnapshot();
 		});
 	});
 });
@@ -180,14 +177,12 @@ export default createReducer(initialState, $1);
 endsnippet
 
 snippet redux_reducer_test "redux_reducer_test"
-import { expect } from 'chai';
-
 import reducer from '.';
 import * as types from '../constants';
 
 describe('reducer', () => {
 	it('handles initial state', () => {
-		expect(reducer(undefined, {})).to.eql({});
+		expect(reducer(undefined, {})).toEqual({});
 	});
 });
 endsnippet
