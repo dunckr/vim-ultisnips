@@ -131,7 +131,7 @@ import { ${1:Container}Container } from './$1';
 const setup = (setupProps = {}) => {
 	const defaultProps = {};
 	const props = { ...defaultProps, ...setupProps };
-	const wrapper = shallow(<BoilerplateContainer {...props} />);
+	const wrapper = shallow(<$1Container {...props} />);
 	return {
 		props,
 		wrapper,
@@ -202,6 +202,6 @@ render(
 	<Provider store={store}>
 		<$1 />
 	</Provider>,
-	document.getElementById('root')
+	document.querySelector('#root')
 );
 endsnippet
