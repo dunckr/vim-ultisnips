@@ -101,10 +101,19 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import ${1:Container} from '../components/$1';
+import $1 from '../components/$1';
 import * as Actions from '../actions';
 
-export const $1Container = props => <$1 {...props} />;
+export class $1Container extends Component {
+	constructor(props) {
+		super(props);
+		this.state = {};
+
+	}
+	render() {
+		return <$1 {...props} />;
+	}
+}
 
 $1Container.propTypes = {
 	reducer: PropTypes.array.isRequired,
